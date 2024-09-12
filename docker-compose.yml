@@ -8,9 +8,9 @@ services:
       - stats-db
 
     environment:
-      - DB_NAME=stats
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - DB_NAME=shareit
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
       - DB_HOST=stats-db
       - DB_PORT=5432
     ports:
@@ -23,6 +23,6 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=stats
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=shareit
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
