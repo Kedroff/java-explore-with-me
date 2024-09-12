@@ -79,7 +79,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.8.0</version> <!-- Updated version -->
+					<version>4.7.0</version>
 					<configuration>
 						<effort>Max</effort>
 						<threshold>High</threshold>
