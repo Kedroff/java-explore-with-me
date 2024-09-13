@@ -30,8 +30,9 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<ViewStats> getStat(String start, String end, List<String> uris, Boolean unique) {
-        LocalDateTime startMoment = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endMoment = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String dateFormat = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime startMoment = LocalDateTime.parse(start, DateTimeFormatter.ofPattern(dateFormat));
+        LocalDateTime endMoment = LocalDateTime.parse(end, DateTimeFormatter.ofPattern(dateFormat));
         this.validateTimeBounds(startMoment, endMoment);
         List<ViewStats> viewStatsList;
         if (uris == null && unique.equals(false)) {
