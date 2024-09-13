@@ -1,6 +1,9 @@
 package ru.practicum.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -11,6 +14,8 @@ import java.time.LocalDateTime;
 @Table(name = "hits")
 @Data
 @Valid
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
