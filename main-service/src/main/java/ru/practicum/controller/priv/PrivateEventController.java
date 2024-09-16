@@ -27,14 +27,14 @@ public class PrivateEventController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH)
     public EventDtoResponse create(@PathVariable(name = "userId") Integer userId,
-                                   @Valid @RequestBody EventDto eventDto) throws EntityNotFoundException, EventPatchException {
+                                   @Valid @RequestBody EventDto eventDto) throws EntityNotFoundException, PatchException {
         return service.create(userId, eventDto);
     }
 
     @PatchMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH_ID)
     public EventDtoResponse patch(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "eventId") Integer eventId,
-                                  @Valid @RequestBody UpdateEventUserRequest updateEventUserRequest) throws EventPatchException,
-            EntityNotFoundException, EventAlreadyPublishedException {
+                                  @Valid @RequestBody UpdateEventUserRequest updateEventUserRequest) throws PatchException,
+            EntityNotFoundException, AlreadyPublishedException {
         return service.patchEvent(userId, eventId, updateEventUserRequest);
     }
 

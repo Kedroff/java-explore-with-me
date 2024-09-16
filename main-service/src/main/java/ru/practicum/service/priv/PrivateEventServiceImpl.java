@@ -112,11 +112,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
     @Override
     public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws EntityNotFoundException,
-            EventPatchException, EventAlreadyPublishedException {
+            PatchException, AlreadyPublishedException {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
                 " was not found"));
         if (event.getState().equals(State.PUBLISHED)) {
-            throw new EventAlreadyPublishedException("Event with id " + eventId + " already published " + event.getState() +
+            throw new AlreadyPublishedException("Event with id " + eventId + " already published " + event.getState() +
                     "and couldn't be changed");
         }
 
@@ -125,14 +125,14 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         if (eventDto.getEventDate() != null) {
             LocalDateTime moment = LocalDateTime.parse(eventDto.getEventDate(), df);
             if (!moment.isAfter(LocalDateTime.now().plusHours(2))) {
-                throw new EventPatchException("Event with id " + eventId + "couldn't be less than 1 hours. Date: " + moment);
+                throw new PatchException("Event with id " + eventId + "couldn't be less than 1 hours. Date: " + moment);
             }
         }
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new EventPatchException("User with id " + userId + "couldn't patch user's event with id " + event.getInitiator().getId());
+            throw new PatchException("User with id " + userId + "couldn't patch user's event with id " + event.getInitiator().getId());
         }
         if (!event.getEventDate().isAfter(LocalDateTime.now().plusHours(2))) {
-            throw new EventPatchException("Event with id " + eventId + "couldn't be less than 2 hours. Date: " + event.getEventDate());
+            throw new PatchException("Event with id " + eventId + "couldn't be less than 2 hours. Date: " + event.getEventDate());
         }
         this.patchEvent(event, eventDto);
         eventRepository.save(event);
@@ -269,9 +269,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
     }
 
-    private void validateTimeEvent(Event event) throws EventPatchException {
+    private void validateTimeEvent(Event event) throws PatchException {
         if (!event.getEventDate().isAfter(LocalDateTime.now().plusHours(2))) {
-            throw new EventPatchException("Event should have date after the 2 hours " + event.getEventDate());
+            throw new PatchException("Event should have date after the 2 hours " + event.getEventDate());
         }
     }
 
