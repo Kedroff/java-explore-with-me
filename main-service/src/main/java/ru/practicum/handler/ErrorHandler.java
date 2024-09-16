@@ -59,7 +59,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handlePatchException(final EventPatchException e) {
+    public ApiError handlePatchException(final PatchException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("bad request");
         ApiError apiError = new ApiError();
@@ -89,7 +89,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handlePatchException(final EventAlreadyPublishedException e) {
+    public ApiError handlePatchException(final AlreadyPublishedException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("duplicate");
         ApiError apiError = new ApiError();
@@ -119,7 +119,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handlePublicationException(final EventPublicationException e) {
+    public ApiError handlePublicationException(final PublicationException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("event is already canceled");
         ApiError apiError = new ApiError();
