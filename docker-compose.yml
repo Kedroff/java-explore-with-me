@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   stats-server:
-    build: ./stats/stats-server
+    build: ../java-explore-with-me/stats/stats-server
 
     depends_on:
       - stats-db
 
     environment:
-      - DB_NAME=shareit
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - DB_HOST=shareit-db
+      - DB_NAME=stats
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - DB_HOST=stats-db
       - DB_PORT=5432
     ports:
       - "9090:9090"
@@ -23,12 +23,12 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=shareit
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=stats
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
 
   ewm-service:
-    build: ./main-service
+    build: ../java-explore-with-me/main-service
 
     depends_on:
       - ewm-db
