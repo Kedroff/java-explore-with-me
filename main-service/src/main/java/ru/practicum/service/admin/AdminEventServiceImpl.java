@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStats;
 import ru.practicum.exceptions.EntityNotFoundException;
-import ru.practicum.exceptions.EventAlreadyPublishedException;
-import ru.practicum.exceptions.EventPatchException;
-import ru.practicum.exceptions.EventPublicationException;
+import ru.practicum.exceptions.AlreadyPublishedException;
+import ru.practicum.exceptions.PatchException;
+import ru.practicum.exceptions.PublicationException;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.mapper.LocationMapper;
 import ru.practicum.model.category.Category;
@@ -111,7 +111,7 @@ public class AdminEventServiceImpl implements AdminEventService {
 
     @Override
     public EventDtoResponse patch(Integer eventId, UpdateEventAdminRequest updateEventAdminRequest) throws EntityNotFoundException,
-            EventPatchException, EventAlreadyPublishedException, EventPublicationException {
+            PatchException, AlreadyPublishedException, PublicationException {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
                 " was not found"));
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -119,14 +119,14 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime moment = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), df);
             if (!moment.isAfter(LocalDateTime.now().plusHours(1))) {
-                throw new EventPatchException("Event with id " + eventId + "couldn't be less than 1 hours. Date: " + moment);
+                throw new PatchException("Event with id " + eventId + "couldn't be less than 1 hours. Date: " + moment);
             }
         }
         if (event.getState().equals(State.PUBLISHED)) {
-            throw new EventAlreadyPublishedException("Event with id " + eventId + " already published " + event.getState());
+            throw new AlreadyPublishedException("Event with id " + eventId + " already published " + event.getState());
         }
         if (event.getState().equals(State.CANCELED)) {
-            throw new EventPublicationException("Event with id eventId already published event.getState())");
+            throw new PublicationException("Event with id eventId already published event.getState())");
         }
         this.patchEvent(event, updateEventAdminRequest);
         eventRepository.save(event);

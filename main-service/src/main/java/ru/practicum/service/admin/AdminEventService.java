@@ -1,9 +1,9 @@
 package ru.practicum.service.admin;
 
 import ru.practicum.exceptions.EntityNotFoundException;
-import ru.practicum.exceptions.EventAlreadyPublishedException;
-import ru.practicum.exceptions.EventPatchException;
-import ru.practicum.exceptions.EventPublicationException;
+import ru.practicum.exceptions.AlreadyPublishedException;
+import ru.practicum.exceptions.PatchException;
+import ru.practicum.exceptions.PublicationException;
 import ru.practicum.model.event.dto.EventDtoResponse;
 import ru.practicum.model.event.dto.UpdateEventAdminRequest;
 
@@ -15,6 +15,6 @@ public interface AdminEventService {
                                       String end, Integer from, Integer size);
 
     public EventDtoResponse patch(Integer eventId, UpdateEventAdminRequest updateEventAdminRequest) throws EntityNotFoundException,
-            EventPatchException, EventAlreadyPublishedException, EventPublicationException;
+            PatchException, AlreadyPublishedException, PublicationException;
 
 }
