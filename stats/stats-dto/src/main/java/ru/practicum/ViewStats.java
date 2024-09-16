@@ -1,13 +1,11 @@
-package ru.practicum.model;
+package ru.practicum;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class ViewStats {
     String app;
     String uri;
