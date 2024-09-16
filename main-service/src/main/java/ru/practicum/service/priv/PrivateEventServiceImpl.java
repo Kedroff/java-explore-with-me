@@ -74,7 +74,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, EventPatchException {
+    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, PatchException {
         Category category = categoryRepository.findById(eventDto.getCategory()).orElseThrow(() -> new
                 EntityNotFoundException("Category with id " + eventDto.getCategory() + " was not found"));
         Event event = eventMapper.eventDtoToEvent(eventDto);

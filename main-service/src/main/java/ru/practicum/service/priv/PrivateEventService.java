@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface PrivateEventService {
 
-    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, EventPatchException;
+    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, PatchException;
 
     public List<EventShortDto> getEvents(Integer userId, Integer from, Integer size) throws EntityNotFoundException;
 
     public EventDtoResponse getFullEvent(Integer userId, Integer eventId) throws EntityNotFoundException;
 
-    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws EntityNotFoundException, EventPatchException, EventAlreadyPublishedException;
+    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws EntityNotFoundException, PatchException, AlreadyPublishedException;
 
     public List<ParticipationRequestDto> getRequests(Integer userId, Integer eventId) throws EntityNotFoundException, RequestErrorException;
 
