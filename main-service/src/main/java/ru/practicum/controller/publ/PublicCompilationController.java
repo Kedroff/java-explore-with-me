@@ -26,7 +26,7 @@ public class PublicCompilationController {
     }
 
     @GetMapping(Constants.COMPILATION_PATH_ID)
-    public CompilationResponseDto getCompilation(@PathVariable(name = "compId") Integer compId) throws EntityNotFoundException {
+    public CompilationResponseDto getCompilation(@PathVariable(name = "comp-id") Integer compId) throws EntityNotFoundException {
         return service.getCompilation(compId);
     }
 }

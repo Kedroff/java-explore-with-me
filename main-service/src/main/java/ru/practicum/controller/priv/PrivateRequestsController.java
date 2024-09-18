@@ -20,21 +20,21 @@ public class PrivateRequestsController {
     PrivateRequestService service;
 
     @GetMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH)
-    public List<ParticipationRequestDto> get(@PathVariable(name = "userId") Integer userId) throws EntityNotFoundException {
+    public List<ParticipationRequestDto> get(@PathVariable(name = "user-id") Integer userId) throws EntityNotFoundException {
         return service.get(userId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH)
-    public ParticipationRequestDto create(@PathVariable(name = "userId") Integer userId,
+    public ParticipationRequestDto create(@PathVariable(name = "user-id") Integer userId,
                                           @RequestParam Integer eventId) throws
             EntityNotFoundException, ParticipationsLimitOvercomeException, RequestErrorException {
         return service.create(userId, eventId);
     }
 
     @PatchMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH + Constants.REQUEST_PATH_ID + "/cancel")
-    public ParticipationRequestDto patch(@PathVariable(name = "userId") Integer userId,
-                                         @PathVariable(name = "requestId") Integer requestId) throws EntityNotFoundException {
+    public ParticipationRequestDto patch(@PathVariable(name = "user-id") Integer userId,
+                                         @PathVariable(name = "request-id") Integer requestId) throws EntityNotFoundException {
         return service.patch(userId, requestId);
     }
 }

@@ -28,14 +28,14 @@ public class AdminCompilationController {
     }
 
     @PatchMapping(Constants.COMPILATION_PATH_ID)
-    public CompilationResponseDto patch(@PathVariable(name = "compId") Integer compId,
+    public CompilationResponseDto patch(@PathVariable(name = "comp-id") Integer compId,
                                         @Valid @RequestBody UpdateCompilationDto updateCompilationDto) throws EntityNotFoundException {
         return service.patch(compId, updateCompilationDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(Constants.COMPILATION_PATH_ID)
-    public void delete(@PathVariable(name = "compId") Integer compId) throws EntityNotFoundException {
+    public void delete(@PathVariable(name = "comp-id") Integer compId) throws EntityNotFoundException {
         service.delete(compId);
     }
 }

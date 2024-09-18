@@ -32,7 +32,7 @@ public class AdminEventController {
     }
 
     @PatchMapping(Constants.EVENT_PATH_ID)
-    public EventDtoResponse patch(@PathVariable(name = "eventId") Integer eventId, @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest)
+    public EventDtoResponse patch(@PathVariable(name = "event-id") Integer eventId, @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest)
             throws PatchException, EntityNotFoundException, AlreadyPublishedException, PublicationException {
         return service.patch(eventId, updateEventAdminRequest);
     }
