@@ -20,24 +20,19 @@ import java.util.List;
 @RequestMapping("/comments")
 public class PrivateCommentController {
 
-    private static final String USER_ID_PATH = Constants.USER_PATH_ID;
-    private static final String EVENT_ID_PATH = Constants.EVENT_PATH + Constants.EVENT_PATH_ID;
-    private static final String COMMENT_ID_PATH = Constants.COMMENT_ID;
-    private static final String COMMENT_PATH = "/comment";
-
     @Autowired
     PrivateCommentService service;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(USER_ID_PATH + Constants.EVENT_PATH + EVENT_ID_PATH)
+    @PostMapping(Constants.USER_PATH_ID + Constants.EVENT_PATH + Constants.EVENT_PATH_ID)
     public CommentDtoResponse create(@PathVariable(name = "user-id") Integer userId,
                                      @PathVariable(name = "event-id") Integer eventId, @Valid @RequestBody
                                      NewCommentDto newCommentDto) throws
-            IsNotPublishedException, NotFoundException {
+           IsNotPublishedException, NotFoundException {
         return service.create(userId, eventId, newCommentDto);
     }
 
-    @PatchMapping(USER_ID_PATH + COMMENT_PATH + COMMENT_ID_PATH)
+    @PatchMapping(Constants.USER_PATH_ID + "/comment" + Constants.COMMENT_ID)
     public CommentDtoResponse patch(@PathVariable(name = "user-id") Integer userId,
                                     @PathVariable(name = "comment-id") Integer commentId, @Valid @RequestBody
                                     UpdateCommentDto updateCommentDto) throws
@@ -45,7 +40,7 @@ public class PrivateCommentController {
         return service.patch(userId, commentId, updateCommentDto);
     }
 
-    @GetMapping(COMMENT_ID_PATH)
+    @GetMapping(Constants.COMMENT_ID)
     public CommentDtoResponse getComment(@PathVariable(name = "comment-id") Integer commentId) throws NotFoundException {
         return service.getComment(commentId);
     }
@@ -60,7 +55,7 @@ public class PrivateCommentController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping(COMMENT_ID_PATH)
+    @DeleteMapping(Constants.COMMENT_ID)
     public void delete(@PathVariable(name = "comment-id") Integer commentId) throws NotFoundException {
         service.delete(commentId);
     }

@@ -16,28 +16,23 @@ import java.util.List;
 @RequestMapping("/users")
 public class PrivateRequestsController {
 
-    private static final String USER_ID_PATH = Constants.USER_PATH_ID;
-    private static final String REQUESTS_PATH = Constants.REQUESTS_PATH;
-    private static final String REQUEST_PATH_ID = Constants.REQUEST_PATH_ID;
-    private static final String CANCEL_PATH = "/cancel";
-
     @Autowired
     PrivateRequestService service;
 
-    @GetMapping(USER_ID_PATH + REQUESTS_PATH)
+    @GetMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH)
     public List<ParticipationRequestDto> get(@PathVariable(name = "user-id") Integer userId) throws NotFoundException {
         return service.get(userId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(USER_ID_PATH + REQUESTS_PATH)
+    @PostMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH)
     public ParticipationRequestDto create(@PathVariable(name = "user-id") Integer userId,
                                           @RequestParam Integer eventId) throws
-            NotFoundException, LimitExceededException, RequestErrorException {
+           NotFoundException, LimitExceededException, RequestErrorException {
         return service.create(userId, eventId);
     }
 
-    @PatchMapping(USER_ID_PATH + REQUESTS_PATH + REQUEST_PATH_ID + CANCEL_PATH)
+    @PatchMapping(Constants.USER_PATH_ID + Constants.REQUESTS_PATH + Constants.REQUEST_PATH_ID + "/cancel")
     public ParticipationRequestDto patch(@PathVariable(name = "user-id") Integer userId,
                                          @PathVariable(name = "request-id") Integer requestId) throws NotFoundException {
         return service.patch(userId, requestId);
