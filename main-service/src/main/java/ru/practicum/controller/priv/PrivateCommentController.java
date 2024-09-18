@@ -23,16 +23,20 @@ public class PrivateCommentController {
     @Autowired
     PrivateCommentService service;
 
+    private static final String USER_EVENT_COMMENT_PATH = Constants.USER_PATH_ID + Constants.EVENT_PATH + Constants.EVENT_PATH_ID;
+    private static final String USER_COMMENT_PATH = Constants.USER_PATH_ID + "/comment" + Constants.COMMENT_ID;
+    private static final String COMMENT_ID_PATH = Constants.COMMENT_ID;
+
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(Constants.USER_PATH_ID + Constants.EVENT_PATH + Constants.EVENT_PATH_ID)
+    @PostMapping(USER_EVENT_COMMENT_PATH)
     public CommentDtoResponse create(@PathVariable(name = "user-id") Integer userId,
                                      @PathVariable(name = "event-id") Integer eventId, @Valid @RequestBody
                                      NewCommentDto newCommentDto) throws
-           IsNotPublishedException, NotFoundException {
+            IsNotPublishedException, NotFoundException {
         return service.create(userId, eventId, newCommentDto);
     }
 
-    @PatchMapping(Constants.USER_PATH_ID + "/comment" + Constants.COMMENT_ID)
+    @PatchMapping(USER_COMMENT_PATH)
     public CommentDtoResponse patch(@PathVariable(name = "user-id") Integer userId,
                                     @PathVariable(name = "comment-id") Integer commentId, @Valid @RequestBody
                                     UpdateCommentDto updateCommentDto) throws
@@ -40,7 +44,7 @@ public class PrivateCommentController {
         return service.patch(userId, commentId, updateCommentDto);
     }
 
-    @GetMapping(Constants.COMMENT_ID)
+    @GetMapping(COMMENT_ID_PATH)
     public CommentDtoResponse getComment(@PathVariable(name = "comment-id") Integer commentId) throws NotFoundException {
         return service.getComment(commentId);
     }
@@ -55,7 +59,7 @@ public class PrivateCommentController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping(Constants.COMMENT_ID)
+    @DeleteMapping(COMMENT_ID_PATH)
     public void delete(@PathVariable(name = "comment-id") Integer commentId) throws NotFoundException {
         service.delete(commentId);
     }

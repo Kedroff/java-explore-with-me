@@ -24,44 +24,48 @@ public class PrivateEventController {
     @Autowired
     PrivateEventService service;
 
+    private static final String USER_EVENTS_PATH = Constants.USER_PATH_ID + Constants.EVENTS_PATH;
+    private static final String USER_EVENTS_PATH_ID = Constants.USER_PATH_ID + Constants.EVENTS_PATH_ID;
+    private static final String USER_EVENT_REQUESTS_PATH = Constants.USER_PATH_ID + Constants.EVENTS_PATH_ID + Constants.REQUESTS_PATH;
+
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH)
+    @PostMapping(USER_EVENTS_PATH)
     public EventDtoResponse create(@PathVariable(name = "user-id") Integer userId,
                                    @Valid @RequestBody EventDto eventDto) throws NotFoundException, PatchException {
         return service.create(userId, eventDto);
     }
 
-    @PatchMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH_ID)
+    @PatchMapping(USER_EVENTS_PATH_ID)
     public EventDtoResponse patch(@PathVariable(name = "user-id") Integer userId, @PathVariable(name = "event-id") Integer eventId,
                                   @Valid @RequestBody UpdateEventUserRequest updateEventUserRequest) throws PatchException,
             NotFoundException, PublishedException {
         return service.patchEvent(userId, eventId, updateEventUserRequest);
     }
 
-    @GetMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH_ID)
+    @GetMapping(USER_EVENTS_PATH_ID)
     public EventDtoResponse getFullEvent(@PathVariable(name = "user-id") Integer userId,
                                          @PathVariable(name = "event-id") Integer eventId) throws NotFoundException {
         return service.getFullEvent(userId, eventId);
     }
 
-    @GetMapping(Constants.USER_PATH_ID + Constants.EVENTS_PATH)
+    @GetMapping(USER_EVENTS_PATH)
     public List<EventShortDto> getEvents(@PathVariable(name = "user-id") Integer userId,
                                          @RequestParam(defaultValue = "0") Integer from,
                                          @RequestParam(defaultValue = "10") Integer size) throws NotFoundException {
         return service.getEvents(userId, from, size);
     }
 
-    @GetMapping(Constants.USER_EVENT_REQUESTS_PATH)
+    @GetMapping(USER_EVENT_REQUESTS_PATH)
     public List<ParticipationRequestDto> getRequests(@PathVariable(name = "user-id") Integer userId,
                                                      @PathVariable(name = "event-id") Integer eventId) throws
             RequestErrorException, NotFoundException {
         return service.getRequests(userId, eventId);
     }
 
-    @PatchMapping(Constants.USER_EVENT_REQUESTS_PATH)
+    @PatchMapping(USER_EVENT_REQUESTS_PATH)
     public RequestStatusResult patchStatus(@PathVariable(name = "user-id") Integer userId,
-                                                      @PathVariable(name = "event-id") Integer eventId,
-                                                      @RequestBody(required = false) EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest)
+                                           @PathVariable(name = "event-id") Integer eventId,
+                                           @RequestBody(required = false) EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest)
             throws RequestErrorException, NotFoundException, LimitExceededException {
         return service.patchStatus(userId, eventId, eventRequestStatusUpdateRequest);
     }
