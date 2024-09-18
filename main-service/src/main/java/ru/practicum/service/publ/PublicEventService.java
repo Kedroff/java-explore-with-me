@@ -1,7 +1,7 @@
 package ru.practicum.service.publ;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
 import ru.practicum.model.event.dto.EventDtoResponse;
 
@@ -14,5 +14,5 @@ public interface PublicEventService {
                                       String rangeEnd, Boolean onlyAvailable, String sort, Integer from,
                                       Integer size, HttpServletRequest request) throws JsonProcessingException, ValidationException;
 
-    public EventDtoResponse getEvent(Integer eventId, HttpServletRequest request) throws EntityNotFoundException;
+    public EventDtoResponse getEvent(Integer eventId, HttpServletRequest request) throws NotFoundException;
 }

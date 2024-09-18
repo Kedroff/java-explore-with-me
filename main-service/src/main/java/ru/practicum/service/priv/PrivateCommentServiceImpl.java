@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.exceptions.CommentException;
-import ru.practicum.exceptions.EntityNotFoundException;
-import ru.practicum.exceptions.EventIsNotPublishedException;
+import ru.practicum.exceptions.NotFoundException;
+import ru.practicum.exceptions.IsNotPublishedException;
 import ru.practicum.exceptions.ValidationException;
 import ru.practicum.mapper.CommentMapper;
 import ru.practicum.model.comment.Comment;
@@ -41,13 +41,13 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     CommentMapper commentMapper;
 
     @Override
-    public CommentDtoResponse create(Integer userId, Integer eventId, NewCommentDto newCommentDto) throws EntityNotFoundException, EventIsNotPublishedException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public CommentDtoResponse create(Integer userId, Integer eventId, NewCommentDto newCommentDto) throws NotFoundException, IsNotPublishedException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new EventIsNotPublishedException("Event with id " + eventId + "is not published");
+            throw new IsNotPublishedException("Event with id " + eventId + "is not published");
         }
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId +
                 " was not found"));
         Comment comment = new Comment();
         comment.setText(newCommentDto.getText());
@@ -59,8 +59,8 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
-    public CommentDtoResponse patch(Integer userId, Integer commentId, UpdateCommentDto updateCommentDto) throws EntityNotFoundException, CommentException {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("Comment with id " + commentId +
+    public CommentDtoResponse patch(Integer userId, Integer commentId, UpdateCommentDto updateCommentDto) throws NotFoundException, CommentException {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment with id " + commentId +
                 " was not found"));
         if (!Objects.equals(comment.getAuthor().getId(), userId)) {
             throw new CommentException("couldn't patch comment as you not author");
@@ -71,8 +71,8 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
-    public CommentDtoResponse getComment(Integer id) throws EntityNotFoundException {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment with id " + id +
+    public CommentDtoResponse getComment(Integer id) throws NotFoundException {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment with id " + id +
                 " was not found"));
         return commentMapper.convertToResponse(comment);
     }
@@ -111,8 +111,8 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
-    public void delete(Integer id) throws EntityNotFoundException {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment with id " + id +
+    public void delete(Integer id) throws NotFoundException {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment with id " + id +
                 " was not found"));
         commentRepository.delete(comment);
     }

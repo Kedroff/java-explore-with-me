@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.exceptions.EmailAlreadyExistsException;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.EmailExistsException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.user.User;
 import ru.practicum.repository.UserRepository;
 
@@ -19,11 +19,11 @@ public class AdminUserServiceImpl implements AdminUserService {
     UserRepository repository;
 
     @Override
-    public User create(User user) throws EmailAlreadyExistsException {
+    public User create(User user) throws EmailExistsException {
         try {
             return repository.save(user);
         } catch (ConstraintViolationException e) {
-            throw new EmailAlreadyExistsException(e.getMessage());
+            throw new EmailExistsException(e.getMessage());
         }
     }
 
@@ -37,8 +37,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public void delete(Integer id) throws EntityNotFoundException {
-        User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id +
+    public void delete(Integer id) throws NotFoundException {
+        User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User with id " + id +
                 " was not found"));
         repository.delete(user);
     }

@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.category.Category;
 import ru.practicum.service.publ.PublicCategoryService;
 
@@ -27,7 +27,7 @@ public class PublicCategoryController {
     }
 
     @GetMapping(Constants.ID)
-    public Category getCategory(@PathVariable Integer id) throws EntityNotFoundException {
+    public Category getCategory(@PathVariable Integer id) throws NotFoundException {
         return service.getCategory(id);
     }
 }

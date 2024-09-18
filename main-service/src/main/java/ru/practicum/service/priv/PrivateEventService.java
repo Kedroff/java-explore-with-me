@@ -8,16 +8,16 @@ import java.util.List;
 
 public interface PrivateEventService {
 
-    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, PatchException;
+    public EventDtoResponse create(Integer userId, EventDto eventDto) throws NotFoundException, PatchException;
 
-    public List<EventShortDto> getEvents(Integer userId, Integer from, Integer size) throws EntityNotFoundException;
+    public List<EventShortDto> getEvents(Integer userId, Integer from, Integer size) throws NotFoundException;
 
-    public EventDtoResponse getFullEvent(Integer userId, Integer eventId) throws EntityNotFoundException;
+    public EventDtoResponse getFullEvent(Integer userId, Integer eventId) throws NotFoundException;
 
-    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws EntityNotFoundException, PatchException, AlreadyPublishedException;
+    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws NotFoundException, PatchException, PublishedException;
 
-    public List<ParticipationRequestDto> getRequests(Integer userId, Integer eventId) throws EntityNotFoundException, RequestErrorException;
+    public List<ParticipationRequestDto> getRequests(Integer userId, Integer eventId) throws NotFoundException, RequestErrorException;
 
-    public EventRequestStatusUpdateResult patchStatus(Integer userId, Integer eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) throws RequestErrorException, EntityNotFoundException, ParticipationsLimitOvercomeException;
+    public RequestStatusResult patchStatus(Integer userId, Integer eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) throws RequestErrorException, NotFoundException, LimitExceededException;
 
 }

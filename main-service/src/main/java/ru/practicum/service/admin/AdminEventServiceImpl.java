@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStats;
-import ru.practicum.exceptions.EntityNotFoundException;
-import ru.practicum.exceptions.AlreadyPublishedException;
+import ru.practicum.exceptions.NotFoundException;
+import ru.practicum.exceptions.PublishedException;
 import ru.practicum.exceptions.PatchException;
 import ru.practicum.exceptions.PublicationException;
 import ru.practicum.mapper.EventMapper;
@@ -110,9 +110,9 @@ public class AdminEventServiceImpl implements AdminEventService {
     }
 
     @Override
-    public EventDtoResponse patch(Integer eventId, UpdateEventAdminRequest updateEventAdminRequest) throws EntityNotFoundException,
-            PatchException, AlreadyPublishedException, PublicationException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public EventDtoResponse patch(Integer eventId, UpdateEventAdminRequest updateEventAdminRequest) throws NotFoundException,
+            PatchException, PublishedException, PublicationException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -123,7 +123,7 @@ public class AdminEventServiceImpl implements AdminEventService {
             }
         }
         if (event.getState().equals(State.PUBLISHED)) {
-            throw new AlreadyPublishedException("Event with id " + eventId + " already published " + event.getState());
+            throw new PublishedException("Event with id " + eventId + " already published " + event.getState());
         }
         if (event.getState().equals(State.CANCELED)) {
             throw new PublicationException("Event with id eventId already published event.getState())");
@@ -133,7 +133,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         return eventMapper.eventToEventDtoResponse(event);
     }
 
-    private Event patchEvent(Event event1, UpdateEventAdminRequest eventDto2) throws EntityNotFoundException {
+    private Event patchEvent(Event event1, UpdateEventAdminRequest eventDto2) throws NotFoundException {
         if (eventDto2.getAnnotation() != null) {
             event1.setAnnotation(eventDto2.getAnnotation());
         }
@@ -151,7 +151,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
         if (eventDto2.getCategory() != null) {
             Category category = categoryRepository.findById(eventDto2.getCategory()).orElseThrow(() ->
-                    new EntityNotFoundException("Category with id " + eventDto2.getCategory() +
+                    new NotFoundException("Category with id " + eventDto2.getCategory() +
                             " was not found"));
             event1.setCategory(category);
         }

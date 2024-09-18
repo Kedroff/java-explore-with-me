@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.model.compilation.Compilation;
@@ -40,8 +40,8 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
     }
 
     @Override
-    public CompilationResponseDto getCompilation(Integer compId) throws EntityNotFoundException {
-        Compilation compilation = repository.findById(compId).orElseThrow(() -> new EntityNotFoundException("Compilation with id " + compId +
+    public CompilationResponseDto getCompilation(Integer compId) throws NotFoundException {
+        Compilation compilation = repository.findById(compId).orElseThrow(() -> new NotFoundException("Compilation with id " + compId +
                 " was not found"));
         CompilationResponseDto responseDto = compilationMapper.compilationToCompilationResponse(compilation);
         return responseDto;

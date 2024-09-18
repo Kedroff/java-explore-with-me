@@ -21,7 +21,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictException(final EmailAlreadyExistsException e) {
+    public ApiError handleConflictException(final EmailExistsException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("email already exists");
         return new ApiError(list, e.getMessage(), e.getCause().toString(), HttpStatus.CONFLICT.toString(),
@@ -30,7 +30,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotFoundException(final EntityNotFoundException e) {
+    public ApiError handleNotFoundException(final NotFoundException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("entity not found");
         ApiError apiError = new ApiError();
@@ -90,7 +90,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handlePatchException(final AlreadyPublishedException e) {
+    public ApiError handlePatchException(final PublishedException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("duplicate");
         ApiError apiError = new ApiError();
@@ -105,7 +105,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleParticipationOvercomeException(final ParticipationsLimitOvercomeException e) {
+    public ApiError handleParticipationOvercomeException(final LimitExceededException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("limit is overcome");
         ApiError apiError = new ApiError();
@@ -165,7 +165,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotPublishedException(final EventIsNotPublishedException e) {
+    public ApiError handleNotPublishedException(final IsNotPublishedException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("event is not published");
         ApiError apiError = new ApiError();

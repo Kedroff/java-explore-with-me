@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
 import ru.practicum.model.event.dto.EventDtoResponse;
 import ru.practicum.service.publ.PublicEventService;
@@ -34,7 +34,7 @@ public class PublicEventController {
     }
 
     @GetMapping(Constants.EVENT_PATH_ID)
-    public EventDtoResponse getEvent(@PathVariable(name = "event-id") Integer eventId, HttpServletRequest request) throws EntityNotFoundException {
+    public EventDtoResponse getEvent(@PathVariable(name = "event-id") Integer eventId, HttpServletRequest request) throws NotFoundException {
         return service.getEvent(eventId, request);
     }
 }

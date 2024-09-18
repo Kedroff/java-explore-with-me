@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.category.Category;
 import ru.practicum.model.category.dto.CategoryDto;
 import ru.practicum.service.admin.AdminCategoryService;
@@ -29,14 +29,14 @@ public class AdminCategoryController {
     }
 
     @PatchMapping(Constants.ID)
-    public Category patch(@PathVariable Integer id, @Valid @RequestBody CategoryDto categoryDto) throws EntityNotFoundException {
+    public Category patch(@PathVariable Integer id, @Valid @RequestBody CategoryDto categoryDto) throws NotFoundException {
         return service.patch(id, categoryDto);
     }
 
 
     @DeleteMapping(Constants.ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) throws EntityNotFoundException {
+    public void delete(@PathVariable Integer id) throws NotFoundException {
         service.delete(id);
     }
 }
