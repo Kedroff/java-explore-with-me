@@ -3,6 +3,7 @@ package ru.practicum.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,7 +21,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictException(final EmailAlreadyExistsException e) {
+    public ApiError handleConflictException(final EmailExistsException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("email already exists");
         return new ApiError(list, e.getMessage(), e.getCause().toString(), HttpStatus.CONFLICT.toString(),
@@ -29,7 +30,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotFoundException(final EntityNotFoundException e) {
+    public ApiError handleNotFoundException(final NotFoundException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("entity not found");
         ApiError apiError = new ApiError();
@@ -89,7 +90,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handlePatchException(final AlreadyPublishedException e) {
+    public ApiError handlePatchException(final PublishedException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("duplicate");
         ApiError apiError = new ApiError();
@@ -104,7 +105,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleParticipationOvercomeException(final ParticipationsLimitOvercomeException e) {
+    public ApiError handleParticipationOvercomeException(final LimitExceededException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("limit is overcome");
         ApiError apiError = new ApiError();
@@ -152,6 +153,51 @@ public class ErrorHandler {
     public ApiError handleValidationException(final ValidationException e) {
         List<StackTraceElement> list = List.of(e.getStackTrace());
         log.info("event is already canceled");
+        ApiError apiError = new ApiError();
+        apiError.setErrors(list);
+        if (e.getCause() != null) {
+            apiError.setReason(e.getCause().toString());
+        }
+        apiError.setMessage(e.getMessage());
+        apiError.setStatus(HttpStatus.BAD_REQUEST.toString());
+        return apiError;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleNotPublishedException(final IsNotPublishedException e) {
+        List<StackTraceElement> list = List.of(e.getStackTrace());
+        log.info("event is not published");
+        ApiError apiError = new ApiError();
+        apiError.setErrors(list);
+        if (e.getCause() != null) {
+            apiError.setReason(e.getCause().toString());
+        }
+        apiError.setMessage(e.getMessage());
+        apiError.setStatus(HttpStatus.NOT_FOUND.toString());
+        return apiError;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleNotPublishedException(final CommentException e) {
+        List<StackTraceElement> list = List.of(e.getStackTrace());
+        log.info("forbidden access");
+        ApiError apiError = new ApiError();
+        apiError.setErrors(list);
+        if (e.getCause() != null) {
+            apiError.setReason(e.getCause().toString());
+        }
+        apiError.setMessage(e.getMessage());
+        apiError.setStatus(HttpStatus.FORBIDDEN.toString());
+        return apiError;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleNotPublishedException(final MethodArgumentNotValidException e) {
+        List<StackTraceElement> list = List.of(e.getStackTrace());
+        log.info("bad request");
         ApiError apiError = new ApiError();
         apiError.setErrors(list);
         if (e.getCause() != null) {

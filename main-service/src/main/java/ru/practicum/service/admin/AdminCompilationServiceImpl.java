@@ -3,7 +3,7 @@ package ru.practicum.service.admin;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.model.compilation.Compilation;
@@ -46,8 +46,8 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     }
 
     @Override
-    public CompilationResponseDto patch(Integer compId, UpdateCompilationDto updateCompilationDto) throws EntityNotFoundException {
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new EntityNotFoundException("Compilation with id " + compId +
+    public CompilationResponseDto patch(Integer compId, UpdateCompilationDto updateCompilationDto) throws NotFoundException {
+        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Compilation with id " + compId +
                 " was not found"));
         this.fillFields(compilation, updateCompilationDto);
         if (updateCompilationDto.getEvents() != null) {
@@ -58,8 +58,8 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     }
 
     @Override
-    public void delete(Integer compId) throws EntityNotFoundException {
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new EntityNotFoundException("Compilation with id " + compId +
+    public void delete(Integer compId) throws NotFoundException {
+        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Compilation with id " + compId +
                 " was not found"));
         compilationRepository.delete(compilation);
     }

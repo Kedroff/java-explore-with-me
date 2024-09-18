@@ -1,16 +1,16 @@
 package ru.practicum.service.admin;
 
-import ru.practicum.exceptions.EmailAlreadyExistsException;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.EmailExistsException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.user.User;
 
 import java.util.List;
 
 public interface AdminUserService {
 
-    public User create(User user) throws EmailAlreadyExistsException;
+    public User create(User user) throws EmailExistsException;
 
     public List<User> get(List<Integer> usersId, Integer from, Integer size);
 
-    public void delete(Integer id) throws EntityNotFoundException;
+    public void delete(Integer id) throws NotFoundException;
 }

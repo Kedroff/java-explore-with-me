@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStats;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.model.event.Event;
@@ -109,11 +109,11 @@ public class PublicEventServiceImpl implements PublicEventService {
     }
 
     @Override
-    public EventDtoResponse getEvent(Integer eventId, HttpServletRequest request) throws EntityNotFoundException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public EventDtoResponse getEvent(Integer eventId, HttpServletRequest request) throws NotFoundException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new EntityNotFoundException("Event with id " + eventId + " was not found");
+            throw new NotFoundException("Event with id " + eventId + " was not found");
         }
         EventDtoResponse eventDtoResponse = this.mapToResponse(event);
         this.countRequests(eventDtoResponse);

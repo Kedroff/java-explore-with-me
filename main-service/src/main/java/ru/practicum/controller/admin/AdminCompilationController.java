@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.compilation.dto.CompilationResponseDto;
 import ru.practicum.model.compilation.dto.NewCompilationDto;
 import ru.practicum.model.compilation.dto.UpdateCompilationDto;
@@ -28,14 +28,14 @@ public class AdminCompilationController {
     }
 
     @PatchMapping(Constants.COMPILATION_PATH_ID)
-    public CompilationResponseDto patch(@PathVariable(name = "compId") Integer compId,
-                                        @Valid @RequestBody UpdateCompilationDto updateCompilationDto) throws EntityNotFoundException {
+    public CompilationResponseDto patch(@PathVariable(name = "comp-id") Integer compId,
+                                        @Valid @RequestBody UpdateCompilationDto updateCompilationDto) throws NotFoundException {
         return service.patch(compId, updateCompilationDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(Constants.COMPILATION_PATH_ID)
-    public void delete(@PathVariable(name = "compId") Integer compId) throws EntityNotFoundException {
+    public void delete(@PathVariable(name = "comp-id") Integer compId) throws NotFoundException {
         service.delete(compId);
     }
 }

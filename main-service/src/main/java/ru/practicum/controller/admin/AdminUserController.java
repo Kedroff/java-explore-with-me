@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.Constants;
-import ru.practicum.exceptions.EmailAlreadyExistsException;
-import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.EmailExistsException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.model.user.User;
 import ru.practicum.service.admin.AdminUserService;
 
@@ -26,7 +26,7 @@ public class AdminUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@Valid @RequestBody User user) throws EmailAlreadyExistsException {
+    public User create(@Valid @RequestBody User user) throws EmailExistsException {
         return service.create(user);
     }
 
@@ -38,7 +38,7 @@ public class AdminUserController {
 
     @DeleteMapping(Constants.ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) throws EntityNotFoundException {
+    public void delete(@PathVariable Integer id) throws NotFoundException {
         service.delete(id);
     }
 }

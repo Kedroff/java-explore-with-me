@@ -74,11 +74,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public EventDtoResponse create(Integer userId, EventDto eventDto) throws EntityNotFoundException, PatchException {
+    public EventDtoResponse create(Integer userId, EventDto eventDto) throws NotFoundException, PatchException {
         Category category = categoryRepository.findById(eventDto.getCategory()).orElseThrow(() -> new
-                EntityNotFoundException("Category with id " + eventDto.getCategory() + " was not found"));
+                NotFoundException("Category with id " + eventDto.getCategory() + " was not found"));
         Event event = eventMapper.eventDtoToEvent(eventDto);
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId +
                 " was not found"));
         event.setInitiator(user);
         event.setCategory(category);
@@ -88,9 +88,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public List<EventShortDto> getEvents(Integer userId, Integer from, Integer size) throws EntityNotFoundException {
+    public List<EventShortDto> getEvents(Integer userId, Integer from, Integer size) throws NotFoundException {
         Pageable pageable = PageRequest.of(from / size, size);
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId +
                 " was not found"));
         List<EventShortDto> list = eventRepository.findAllByInitiator(user, pageable).stream()
                 .map(this::countRequests)
@@ -101,8 +101,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public EventDtoResponse getFullEvent(Integer userId, Integer eventId) throws EntityNotFoundException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public EventDtoResponse getFullEvent(Integer userId, Integer eventId) throws NotFoundException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         EventDtoResponse eventDtoResponse = eventMapper.eventToEventDtoResponse(event);
         eventDtoResponse.setConfirmedRequests(this.fillConfirmedRequests(eventDtoResponse.getId()));
@@ -111,12 +111,12 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws EntityNotFoundException,
-            PatchException, AlreadyPublishedException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public EventDtoResponse patchEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto) throws NotFoundException,
+            PatchException, PublishedException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         if (event.getState().equals(State.PUBLISHED)) {
-            throw new AlreadyPublishedException("Event with id " + eventId + " already published " + event.getState() +
+            throw new PublishedException("Event with id " + eventId + " already published " + event.getState() +
                     "and couldn't be changed");
         }
 
@@ -142,8 +142,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public List<ParticipationRequestDto> getRequests(Integer userId, Integer eventId) throws EntityNotFoundException {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+    public List<ParticipationRequestDto> getRequests(Integer userId, Integer eventId) throws NotFoundException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         List<ParticipationRequest> participationRequests = requestRepository.findAllByEvent(event);
         return participationRequests.stream()
@@ -152,11 +152,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public EventRequestStatusUpdateResult patchStatus(Integer userId, Integer eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest)
-            throws RequestErrorException, ParticipationsLimitOvercomeException { // подтверждение заявки на участие
+    public RequestStatusResult patchStatus(Integer userId, Integer eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest)
+            throws RequestErrorException, LimitExceededException { // подтверждение заявки на участие
         try {
 
-            Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+            Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                     " was not found"));
             List<Integer> listIdsRequests = eventRequestStatusUpdateRequest.getRequestIds();
 
@@ -164,15 +164,15 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 this.confirmRequest(listIdsRequests);
             }
             String status = eventRequestStatusUpdateRequest.getStatus();
-            EventRequestStatusUpdateResult updateResult = this.fillStatus(event, listIdsRequests, status);
+            RequestStatusResult updateResult = this.fillStatus(event, listIdsRequests, status);
 
             return updateResult;
-        } catch (NullPointerException | EntityNotFoundException e) {
+        } catch (NullPointerException | NotFoundException e) {
             throw new RequestErrorException("Event with id " + eventId + " was already accepted");
         }
     }
 
-    private Event patchEvent(Event event1, UpdateEventUserRequest eventDto2) throws EntityNotFoundException {
+    private Event patchEvent(Event event1, UpdateEventUserRequest eventDto2) throws NotFoundException {
         if (eventDto2.getAnnotation() != null) {
             event1.setAnnotation(eventDto2.getAnnotation());
         }
@@ -190,7 +190,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
         if (eventDto2.getCategory() != null) {
             Category category = categoryRepository.findById(eventDto2.getCategory()).orElseThrow(() ->
-                    new EntityNotFoundException("Category with id " + eventDto2.getCategory() +
+                    new NotFoundException("Category with id " + eventDto2.getCategory() +
                             " was not found"));
             event1.setCategory(category);
         }
@@ -217,9 +217,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return eventShortDtoDb;
     }
 
-    private EventRequestStatusUpdateResult fillStatus(Event event, List<Integer> requestIds, String status)
-            throws EntityNotFoundException, ParticipationsLimitOvercomeException {
-        EventRequestStatusUpdateResult updateResult = new EventRequestStatusUpdateResult();
+    private RequestStatusResult fillStatus(Event event, List<Integer> requestIds, String status)
+            throws NotFoundException, LimitExceededException {
+        RequestStatusResult updateResult = new RequestStatusResult();
         updateResult.setConfirmedRequests(new ArrayList<>());
         updateResult.setRejectedRequests(new ArrayList<>());
         Status statusEnum = Status.valueOf(status);
@@ -227,20 +227,20 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             case CONFIRMED:
                 for (Integer id : requestIds) {
                     int count = requestRepository.countRequests(event.getId());
-                    ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Request with id " + id +
+                    ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Request with id " + id +
                             " was not found"));
                     if (count < event.getParticipantLimit()) {
                         request.setStatus(Status.CONFIRMED);
                         requestRepository.save(request);
                         updateResult.getConfirmedRequests().add(requestMapper.requestToDto(request));
                     } else {
-                        throw new ParticipationsLimitOvercomeException("limit is overcome");
+                        throw new LimitExceededException("limit is overcome");
                     }
                 }
                 break;
             case REJECTED:
                 for (Integer id : requestIds) {
-                    ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Request with id " + id +
+                    ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Request with id " + id +
                             " was not found"));
                     request.setStatus(Status.REJECTED);
                     requestRepository.save(request);
@@ -260,9 +260,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return requestRepository.countConfirmedRequests(eventId);
     }
 
-    private void confirmRequest(List<Integer> requestIds) throws EntityNotFoundException {
+    private void confirmRequest(List<Integer> requestIds) throws NotFoundException {
         for (Integer id : requestIds) {
-            ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Request with id " + id +
+            ParticipationRequest request = requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Request with id " + id +
                     " was not found"));
             request.setStatus(Status.CONFIRMED);
             requestRepository.save(request);

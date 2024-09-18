@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.exceptions.EntityNotFoundException;
-import ru.practicum.exceptions.ParticipationsLimitOvercomeException;
+import ru.practicum.exceptions.NotFoundException;
+import ru.practicum.exceptions.LimitExceededException;
 import ru.practicum.exceptions.RequestErrorException;
 import ru.practicum.mapper.RequestMapper;
 import ru.practicum.model.event.Event;
@@ -38,8 +38,8 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     RequestMapper requestMapper;
 
     @Override
-    public List<ParticipationRequestDto> get(Integer userId) throws EntityNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId +
+    public List<ParticipationRequestDto> get(Integer userId) throws NotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId +
                 " was not found"));
         List<ParticipationRequest> participationRequests = requestRepository.findAllByRequester(user);
         return participationRequests.stream()
@@ -48,12 +48,12 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     }
 
     @Override
-    public ParticipationRequestDto create(Integer userId, Integer eventId) throws EntityNotFoundException,
-            ParticipationsLimitOvercomeException, RequestErrorException {
+    public ParticipationRequestDto create(Integer userId, Integer eventId) throws NotFoundException,
+            LimitExceededException, RequestErrorException {
         ParticipationRequest request = new ParticipationRequest();
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId +
                 " was not found"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event with id " + eventId +
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId +
                 " was not found"));
         ParticipationRequest lastRequest = requestRepository.findByRequester(user);
         if (lastRequest != null) {
@@ -74,15 +74,15 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
         }
         int confirmedRequest = requestRepository.countRequests(event.getId());
         if (event.getParticipantLimit() <= confirmedRequest && event.getParticipantLimit() != 0) {
-            throw new ParticipationsLimitOvercomeException("limit request was reached " + confirmedRequest);
+            throw new LimitExceededException("limit request was reached " + confirmedRequest);
         }
         request = requestRepository.save(request);
         return requestMapper.requestToDto(request);
     }
 
     @Override
-    public ParticipationRequestDto patch(Integer userId, Integer requestId) throws EntityNotFoundException {
-        ParticipationRequest request = requestRepository.findById(requestId).orElseThrow(() -> new EntityNotFoundException("Request with id " + requestId +
+    public ParticipationRequestDto patch(Integer userId, Integer requestId) throws NotFoundException {
+        ParticipationRequest request = requestRepository.findById(requestId).orElseThrow(() -> new NotFoundException("Request with id " + requestId +
                 " was not found"));
         if (request.getRequester().getId().equals(userId)) {
             request.setStatus(Status.CANCELED);
